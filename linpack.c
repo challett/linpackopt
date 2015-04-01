@@ -80,43 +80,43 @@ int main(void)
     int i;
     for (i=0; i<N;i++)
       {
-	  /*        printf("Enter array size (q to quit) [200]:  ");
-		    fgets(buf,79,stdin);
-		    if (buf[0]=='q' || buf[0]=='Q')
-		    break;
-		    if (buf[0]=='\0' || buf[0]=='\n')
-		    arsize=200;
-		    else
-		    arsize=atoi(buf);
-	  */
-	  arsize = sizes[i];
-	  arsize/=2;
-	  arsize*=2;
-	  if (arsize<10)
+    /*        printf("Enter array size (q to quit) [200]:  ");
+        fgets(buf,79,stdin);
+        if (buf[0]=='q' || buf[0]=='Q')
+        break;
+        if (buf[0]=='\0' || buf[0]=='\n')
+        arsize=200;
+        else
+        arsize=atoi(buf);
+    */
+    arsize = sizes[i];
+    arsize/=2;
+    arsize*=2;
+    if (arsize<10)
             {
-	      printf("Too small.\n");
-	      continue;
+        printf("Too small.\n");
+        continue;
             }
-	  arsize2d = (long)arsize*(long)arsize;
-	  memreq=arsize2d*sizeof(REAL)+(long)arsize*sizeof(REAL)+(long)arsize*sizeof(int);
-	  printf("Memory required:  %ldK.\n",(memreq+512L)>>10);
-	  malloc_arg=(size_t)memreq;
-	  if (malloc_arg!=memreq || (mempool=malloc(malloc_arg))==NULL)
+    arsize2d = (long)arsize*(long)arsize;
+    memreq=arsize2d*sizeof(REAL)+(long)arsize*sizeof(REAL)+(long)arsize*sizeof(int);
+    printf("Memory required:  %ldK.\n",(memreq+512L)>>10);
+    malloc_arg=(size_t)memreq;
+    if (malloc_arg!=memreq || (mempool=malloc(malloc_arg))==NULL)
             {
-	      printf("Not enough memory available for given array size.\n\n");
-	      continue;
+        printf("Not enough memory available for given array size.\n\n");
+        continue;
             }
-	  printf("\n\nLINPACK benchmark, %s precision.\n",PREC);
-	  printf("Machine precision:  %d digits.\n",BASE10DIG);
-	  printf("Array size %d X %d.\n",arsize,arsize);
-	  printf("Average rolled and unrolled performance:\n\n");
-	  printf("    Reps Time(s) DGEFA   DGESL  OVERHEAD    MFLOPS\n");
-	  printf("----------------------------------------------------\n");
-	  nreps=1;
-	  while (linpack(nreps,arsize)<10.)
+    printf("\n\nLINPACK benchmark, %s precision.\n",PREC);
+    printf("Machine precision:  %d digits.\n",BASE10DIG);
+    printf("Array size %d X %d.\n",arsize,arsize);
+    printf("Average rolled and unrolled performance:\n\n");
+    printf("    Reps Time(s) DGEFA   DGESL  OVERHEAD    MFLOPS\n");
+    printf("----------------------------------------------------\n");
+    nreps=1;
+    while (linpack(nreps,arsize)<10.)
             nreps*=2;
-	  free(mempool);
-	  printf("\n");
+    free(mempool);
+    printf("\n");
         }
     return 0;
   }
@@ -172,9 +172,9 @@ static REAL linpack(long nreps,int arsize)
   if (toverhead<0.)
     toverhead=0.;
   printf("%8ld %6.2f %6.2f%% %6.2f%% %6.2f%%  %9.3f\n",
-	 nreps,totalt,100.*tdgefa/totalt,
-	 100.*tdgesl/totalt,100.*toverhead/totalt,
-	 kflops/1e3);
+   nreps,totalt,100.*tdgefa/totalt,
+   100.*tdgesl/totalt,100.*toverhead/totalt,
+   kflops/1e3);
   return(totalt);
 }
 
@@ -195,14 +195,14 @@ static void matgen(REAL *a,int lda,int n,REAL *b,REAL *norma)
   for (j = 0; j < n*n; j++)
     //    for (i = 0; i < n; i++)
       {
-	init = (int)((long)3125*(long)init % 65536L);
-	//OPT
-	//	a[lda*j+i] = (init - 32768.0)/16384.0;
-	//	*norma = (a[lda*j+i] > *norma) ? a[lda*j+i] : *norma;
-	//Replace by
-	double tmp = (init - 32768.0)/16384.0;
-	*norma = (tmp > *norma) ? tmp : *norma;
-	a[j] = tmp;
+  init = (int)((long)3125*(long)init % 65536L);
+  //OPT
+  //	a[lda*j+i] = (init - 32768.0)/16384.0;
+  //	*norma = (a[lda*j+i] > *norma) ? a[lda*j+i] : *norma;
+  //Replace by
+  double tmp = (init - 32768.0)/16384.0;
+  *norma = (tmp > *norma) ? tmp : *norma;
+  a[j] = tmp;
       }
 
   for (i = 0; i < n; i++)
@@ -284,108 +284,108 @@ static void dgefa(REAL *a,int lda,int n,int *ipvt,int *info,int roll)
       *info = 0;
       nm1 = n - 1;
       if (nm1 >=  0)
-	for (k = 0; k < nm1; k++)
-	  {
-	    kp1 = k + 1;
+  for (k = 0; k < nm1; k++)
+    {
+      kp1 = k + 1;
 
-	    /* find l = pivot index */
+      /* find l = pivot index */
 
-	    l = idamax(n-k,&a[lda*k+k],1) + k;
-	    ipvt[k] = l;
+      l = idamax(n-k,&a[lda*k+k],1) + k;
+      ipvt[k] = l;
 
-	    /* zero pivot implies this column already
-	       triangularized */
+      /* zero pivot implies this column already
+         triangularized */
 
-	    if (a[lda*k+l] != ZERO)
-	      {
+      if (a[lda*k+l] != ZERO)
+        {
 
-		/* interchange if necessary */
+    /* interchange if necessary */
 
-		if (l != k)
-		  {
-		    t = a[lda*k+l];
-		    a[lda*k+l] = a[lda*k+k];
-		    a[lda*k+k] = t;
-		  }
+    if (l != k)
+      {
+        t = a[lda*k+l];
+        a[lda*k+l] = a[lda*k+k];
+        a[lda*k+k] = t;
+      }
 
-		/* compute multipliers */
+    /* compute multipliers */
 
-		t = -ONE/a[lda*k+k];
-		dscal_r(n-(k+1),t,&a[lda*k+k+1],1);
+    t = -ONE/a[lda*k+k];
+    dscal_r(n-(k+1),t,&a[lda*k+k+1],1);
 
-		/* row elimination with column indexing */
+    /* row elimination with column indexing */
 
-		for (j = kp1; j < n; j++)
-		  {
-		    t = a[lda*j+l];
-		    if (l != k)
-		      {
-			a[lda*j+l] = a[lda*j+k];
-			a[lda*j+k] = t;
-		      }
-		    daxpy_r(n-(k+1),t,&a[lda*k+k+1],1,&a[lda*j+k+1],1);
-		  }
-	      }
-	    else
-	      (*info) = k;
-	  }
+    for (j = kp1; j < n; j++)
+      {
+        t = a[lda*j+l];
+        if (l != k)
+          {
+      a[lda*j+l] = a[lda*j+k];
+      a[lda*j+k] = t;
+          }
+        daxpy_r(n-(k+1),t,&a[lda*k+k+1],1,&a[lda*j+k+1],1);
+      }
+        }
+      else
+        (*info) = k;
+    }
       ipvt[n-1] = n-1;
       if (a[lda*(n-1)+(n-1)] == ZERO)
-	(*info) = n-1;
+  (*info) = n-1;
     }
   else
     {
       *info = 0;
       nm1 = n - 1;
       if (nm1 >=  0)
-	for (k = 0; k < nm1; k++)
-	  {
-	    kp1 = k + 1;
+  for (k = 0; k < nm1; k++)
+    {
+      kp1 = k + 1;
 
-	    /* find l = pivot index */
+      /* find l = pivot index */
 
-	    l = idamax(n-k,&a[lda*k+k],1) + k;
-	    ipvt[k] = l;
+      l = idamax(n-k,&a[lda*k+k],1) + k;
+      ipvt[k] = l;
 
-	    /* zero pivot implies this column already
-	       triangularized */
+      /* zero pivot implies this column already
+         triangularized */
 
-	    if (a[lda*k+l] != ZERO)
-	      {
+      if (a[lda*k+l] != ZERO)
+        {
 
-		/* interchange if necessary */
+    /* interchange if necessary */
 
-		if (l != k)
-		  {
-		    t = a[lda*k+l];
-		    a[lda*k+l] = a[lda*k+k];
-		    a[lda*k+k] = t;
-		  }
+    if (l != k)
+      {
+        t = a[lda*k+l];
+        a[lda*k+l] = a[lda*k+k];
+        a[lda*k+k] = t;
+      }
 
-		/* compute multipliers */
+    /* compute multipliers */
 
-		t = -ONE/a[lda*k+k];
-		dscal_ur(n-(k+1),t,&a[lda*k+k+1],1);
+    t = -ONE/a[lda*k+k];
+    dscal_ur(n-(k+1),t,&a[lda*k+k+1],1);
 
-		/* row elimination with column indexing */
+    /* row elimination with column indexing */
 
-		for (j = kp1; j < n; j++)
-		  {
-		    t = a[lda*j+l];
-		    if (l != k)
-		      {
-			a[lda*j+l] = a[lda*j+k];
-			a[lda*j+k] = t;
-		      }
-		    daxpy_ur(n-(k+1),t,&a[lda*k+k+1],1,&a[lda*j+k+1],1);
-		  }
-	      }
-	    else
-	      (*info) = k;
-	  }
+    for (j = kp1; j < n; j++)
+      {
+        t = a[lda*j+l];
+        if (l != k)
+          {
+      a[lda*j+l] = a[lda*j+k];
+      a[lda*j+k] = t;
+          }
+        daxpy_ur(n-(k+1),t,&a[lda*k+k+1],1,&a[lda*j+k+1],1);
+      }
+        }
+      else
+        (*info) = k;
+    }
       ipvt[n-1] = n-1;
       if (a[lda*(n-1)+(n-1)] == ZERO)
-	(*info) = n-1;
+  (*info) = n-1;
     }
 }
 
@@ -461,123 +461,123 @@ static void dgesl(REAL *a,int lda,int n,int *ipvt,REAL *b,int job,int roll)
     {
       nm1 = n - 1;
       if (job == 0)
-	{
+  {
 
-	  /* job = 0 , solve  a * x = b   */
-	  /* first solve  l*y = b         */
+    /* job = 0 , solve  a * x = b   */
+    /* first solve  l*y = b         */
 
-	  if (nm1 >= 1)
-	    for (k = 0; k < nm1; k++)
-	      {
-		l = ipvt[k];
-		t = b[l];
-		if (l != k)
-		  {
-		    b[l] = b[k];
-		    b[k] = t;
-		  }
-		daxpy_r(n-(k+1),t,&a[lda*k+k+1],1,&b[k+1],1);
-	      }
+    if (nm1 >= 1)
+      for (k = 0; k < nm1; k++)
+        {
+    l = ipvt[k];
+    t = b[l];
+    if (l != k)
+      {
+        b[l] = b[k];
+        b[k] = t;
+      }
+    daxpy_r(n-(k+1),t,&a[lda*k+k+1],1,&b[k+1],1);
+        }
 
-	  /* now solve  u*x = y */
+    /* now solve  u*x = y */
 
-	  for (kb = 0; kb < n; kb++)
-	    {
-	      k = n - (kb + 1);
-	      b[k] = b[k]/a[lda*k+k];
-	      t = -b[k];
-	      daxpy_r(k,t,&a[lda*k+0],1,&b[0],1);
-	    }
-	}
+    for (kb = 0; kb < n; kb++)
+      {
+        k = n - (kb + 1);
+        b[k] = b[k]/a[lda*k+k];
+        t = -b[k];
+        daxpy_r(k,t,&a[lda*k+0],1,&b[0],1);
+      }
+  }
       else
-	{
+  {
 
-	  /* job = nonzero, solve  trans(a) * x = b  */
-	  /* first solve  trans(u)*y = b             */
+    /* job = nonzero, solve  trans(a) * x = b  */
+    /* first solve  trans(u)*y = b             */
 
-	  for (k = 0; k < n; k++)
-	    {
-	      t = ddot_r(k,&a[lda*k+0],1,&b[0],1);
-	      b[k] = (b[k] - t)/a[lda*k+k];
-	    }
+    for (k = 0; k < n; k++)
+      {
+        t = ddot_r(k,&a[lda*k+0],1,&b[0],1);
+        b[k] = (b[k] - t)/a[lda*k+k];
+      }
 
-	  /* now solve trans(l)*x = y     */
+    /* now solve trans(l)*x = y     */
 
-	  if (nm1 >= 1)
-	    for (kb = 1; kb < nm1; kb++)
-	      {
-		k = n - (kb+1);
-		b[k] = b[k] + ddot_r(n-(k+1),&a[lda*k+k+1],1,&b[k+1],1);
-		l = ipvt[k];
-		if (l != k)
-		  {
-		    t = b[l];
-		    b[l] = b[k];
-		    b[k] = t;
-		  }
-	      }
-	}
+    if (nm1 >= 1)
+      for (kb = 1; kb < nm1; kb++)
+        {
+    k = n - (kb+1);
+    b[k] = b[k] + ddot_r(n-(k+1),&a[lda*k+k+1],1,&b[k+1],1);
+    l = ipvt[k];
+    if (l != k)
+      {
+        t = b[l];
+        b[l] = b[k];
+        b[k] = t;
+      }
+        }
+  }
     }
   else
     {
       nm1 = n - 1;
       if (job == 0)
-	{
+  {
 
-	  /* job = 0 , solve  a * x = b   */
-	  /* first solve  l*y = b         */
+    /* job = 0 , solve  a * x = b   */
+    /* first solve  l*y = b         */
 
-	  if (nm1 >= 1)
-	    for (k = 0; k < nm1; k++)
-	      {
-		l = ipvt[k];
-		t = b[l];
-		if (l != k)
-		  {
-		    b[l] = b[k];
-		    b[k] = t;
-		  }
-		daxpy_ur(n-(k+1),t,&a[lda*k+k+1],1,&b[k+1],1);
-	      }
+    if (nm1 >= 1)
+      for (k = 0; k < nm1; k++)
+        {
+    l = ipvt[k];
+    t = b[l];
+    if (l != k)
+      {
+        b[l] = b[k];
+        b[k] = t;
+      }
+    daxpy_ur(n-(k+1),t,&a[lda*k+k+1],1,&b[k+1],1);
+        }
 
-	  /* now solve  u*x = y */
+    /* now solve  u*x = y */
 
-	  for (kb = 0; kb < n; kb++)
-	    {
-	      k = n - (kb + 1);
-	      b[k] = b[k]/a[lda*k+k];
-	      t = -b[k];
-	      daxpy_ur(k,t,&a[lda*k+0],1,&b[0],1);
-	    }
-	}
+    for (kb = 0; kb < n; kb++)
+      {
+        k = n - (kb + 1);
+        b[k] = b[k]/a[lda*k+k];
+        t = -b[k];
+        daxpy_ur(k,t,&a[lda*k+0],1,&b[0],1);
+      }
+  }
       else
-	{
+  {
 
-	  /* job = nonzero, solve  trans(a) * x = b  */
-	  /* first solve  trans(u)*y = b             */
+    /* job = nonzero, solve  trans(a) * x = b  */
+    /* first solve  trans(u)*y = b             */
 
-	  for (k = 0; k < n; k++)
-	    {
-	      t = ddot_ur(k,&a[lda*k+0],1,&b[0],1);
-	      b[k] = (b[k] - t)/a[lda*k+k];
-	    }
+    for (k = 0; k < n; k++)
+      {
+        t = ddot_ur(k,&a[lda*k+0],1,&b[0],1);
+        b[k] = (b[k] - t)/a[lda*k+k];
+      }
 
-	  /* now solve trans(l)*x = y     */
+    /* now solve trans(l)*x = y     */
 
-	  if (nm1 >= 1)
-	    for (kb = 1; kb < nm1; kb++)
-	      {
-		k = n - (kb+1);
-		b[k] = b[k] + ddot_ur(n-(k+1),&a[lda*k+k+1],1,&b[k+1],1);
-		l = ipvt[k];
-		if (l != k)
-		  {
-		    t = b[l];
-		    b[l] = b[k];
-		    b[k] = t;
-		  }
-	      }
-	}
+    if (nm1 >= 1)
+      for (kb = 1; kb < nm1; kb++)
+        {
+    k = n - (kb+1);
+    b[k] = b[k] + ddot_ur(n-(k+1),&a[lda*k+k+1],1,&b[k+1],1);
+    l = ipvt[k];
+    if (l != k)
+      {
+        t = b[l];
+        b[l] = b[k];
+        b[k] = t;
+      }
+        }
+  }
     }
 }
 
@@ -649,11 +649,11 @@ static REAL ddot_r(int n,REAL *dx,int incx,REAL *dy,int incy)
       if (incx < 0) ix = (-n+1)*incx;
       if (incy < 0) iy = (-n+1)*incy;
       for (i = 0;i < n; i++)
-	{
-	  dtemp = dtemp + dx[ix]*dy[iy];
-	  ix = ix + incx;
-	  iy = iy + incy;
-	}
+  {
+    dtemp = dtemp + dx[ix]*dy[iy];
+    ix = ix + incx;
+    iy = iy + incy;
+  }
       return(dtemp);
     }
   */
@@ -686,7 +686,7 @@ static void dscal_r(int n,REAL da,REAL *dx,int incx)
 
       nincx = n*incx;
       for (i = 0; i < nincx; i = i + incx)
-	dx[i] = da*dx[i];
+           dx[i] = da*dx[i];
       return;
     }
 
@@ -702,6 +702,8 @@ static void dscal_r(int n,REAL da,REAL *dx,int incx)
 ** Jack Dongarra, linpack, 3/11/78.
 ** UNROLLED version
 */
+
+
 static void daxpy_ur(int n,REAL da,REAL *dx,int incx,REAL *dy,int incy)
 
 {
@@ -720,32 +722,43 @@ static void daxpy_ur(int n,REAL da,REAL *dx,int incx,REAL *dy,int incy)
       if(incx < 0) ix = (-n+1)*incx + 1;
       if(incy < 0)iy = (-n+1)*incy + 1;
       for (i = 0;i < n; i++)
-	{
-	  dy[iy] = dy[iy] + da*dx[ix];
-	  ix = ix + incx;
-	  iy = iy + incy;
-	}
+  {
+    dy[iy] = dy[iy] + da*dx[ix];
+    ix = ix + incx;
+    iy = iy + incy;
+  }
       return;
     }
   */
 
   /* code for both increments equal to 1 */
 
-  m = n % 4;
+  m = n % 16;
   if ( m != 0)
     {
       for (i = 0; i < m; i++)
-	dy[i] = dy[i] + da*dx[i];
-      if (n < 4)
-	return;
+  dy[i] = dy[i] + da*dx[i];
+      if (n < 16)
+  return;
     }
-  for (i = m; i < n; i = i + 4)
+  for (i = m; i < n; i = i + 16)
     {
       dy[i] = dy[i] + da*dx[i];
       dy[i+1] = dy[i+1] + da*dx[i+1];
       dy[i+2] = dy[i+2] + da*dx[i+2];
       dy[i+3] = dy[i+3] + da*dx[i+3];
-
+      dy[i+4] = dy[i+4] + da*dx[i+4];
+      dy[i+5] = dy[i+5] + da*dx[i+5];
+      dy[i+6] = dy[i+6] + da*dx[i+6];
+      dy[i+7] = dy[i+7] + da*dx[i+7];
+      dy[i+8] = dy[i+8] + da*dx[i+8];
+      dy[i+9] = dy[i+9] + da*dx[i+9];
+      dy[i+10] = dy[i+10] + da*dx[i+10];
+      dy[i+11] = dy[i+11] + da*dx[i+11];
+      dy[i+12] = dy[i+12] + da*dx[i+12];
+      dy[i+13] = dy[i+13] + da*dx[i+13];
+      dy[i+14] = dy[i+14] + da*dx[i+14];
+      dy[i+15] = dy[i+15] + da*dx[i+15];
     }
 }
 
@@ -774,11 +787,11 @@ static REAL ddot_ur(int n,REAL *dx,int incx,REAL *dy,int incy)
       if (incx < 0) ix = (-n+1)*incx;
       if (incy < 0) iy = (-n+1)*incy;
       for (i = 0;i < n; i++)
-	{
-	  dtemp = dtemp + dx[ix]*dy[iy];
-	  ix = ix + incx;
-	  iy = iy + incy;
-	}
+  {
+    dtemp = dtemp + dx[ix]*dy[iy];
+    ix = ix + incx;
+    iy = iy + incy;
+  }
       return(dtemp);
     }
   */
@@ -789,9 +802,9 @@ static REAL ddot_ur(int n,REAL *dx,int incx,REAL *dy,int incy)
   if (m != 0)
     {
       for (i = 0; i < m; i++)
-	dtemp = dtemp + dx[i]*dy[i];
+         dtemp = dtemp + dx[i]*dy[i];
       if (n < 5)
-	return(dtemp);
+         return(dtemp);
     }
   for (i = m; i < n; i = i + 5)
     {
@@ -822,7 +835,7 @@ static void dscal_ur(int n,REAL da,REAL *dx,int incx)
 
       nincx = n*incx;
       for (i = 0; i < nincx; i = i + incx)
-	dx[i] = da*dx[i];
+  dx[i] = da*dx[i];
       return;
     }
 
@@ -832,9 +845,9 @@ static void dscal_ur(int n,REAL da,REAL *dx,int incx)
   if (m != 0)
     {
       for (i = 0; i < m; i++)
-	dx[i] = da*dx[i];
+  dx[i] = da*dx[i];
       if (n < 5)
-	return;
+  return;
     }
   for (i = m; i < n; i = i + 5)
     {
@@ -870,14 +883,14 @@ static int idamax(int n,REAL *dx,int incx)
       dmax = fabs((double)dx[0]);
       ix = ix + incx;
       for (i = 1; i < n; i++)
-	{
-	  if(fabs((double)dx[ix]) > dmax)
-	    {
-	      itemp = i;
-	      dmax = fabs((double)dx[ix]);
-	    }
-	  ix = ix + incx;
-	}
+  {
+    if(fabs((double)dx[ix]) > dmax)
+      {
+        itemp = i;
+        dmax = fabs((double)dx[ix]);
+      }
+    ix = ix + incx;
+  }
     }
   else
     {
@@ -887,11 +900,11 @@ static int idamax(int n,REAL *dx,int incx)
       itemp = 0;
       dmax = fabs((double)dx[0]);
       for (i = 1; i < n; i++)
-	if(fabs((double)dx[i]) > dmax)
-	  {
-	    itemp = i;
-	    dmax = fabs((double)dx[i]);
-	  }
+  if(fabs((double)dx[i]) > dmax)
+    {
+      itemp = i;
+      dmax = fabs((double)dx[i]);
+    }
     }
   return (itemp);
 }
